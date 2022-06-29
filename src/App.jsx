@@ -7,7 +7,7 @@ import { ThemeProvider } from "styled-components";
 import { useRef, useState } from "react";
 import Header from "./Header";
 import Footer from "./Footer";
-import Slogun from "./Slogun";
+import Slogan from "./Slogan";
 import ShowPostList from "./ShowPostList";
 
 function App() {
@@ -34,7 +34,7 @@ function App() {
 				<MediaDiv>
 					<Header darkMode={darkMode} setDarkMode={setDarkMode} />
 					<Main>
-						<Slogun />
+						<Slogan />
 						<ShowPostList
 							loading={loading}
 							isPost={isPost}
