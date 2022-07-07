@@ -1,32 +1,21 @@
-import { Main, MediaDiv } from "./styledComponent";
+import { Main, MediaDiv } from "./components/styledComponent";
 
 // yarn add @fortawesome/free-solid-svg-icons @fortawesome/react-fontawesome @fortawesome/fontawesome-svg-core @fortawesome/free-brands-svg-icons
 
-import { darkTheme, lightTheme, GlobalStyles } from "./styles";
+import { darkTheme, lightTheme, GlobalStyles } from "./components/styles";
 import { ThemeProvider } from "styled-components";
 import { useRef, useState } from "react";
-import Header from "./Header";
-import Footer from "./Footer";
-import Slogan from "./Slogan";
-import ShowPostList from "./ShowPostList";
+import Header from "./components/Header";
+import Footer from "./components/Footer";
+import Slogan from "./components/Slogan";
+import ShowPostList from "./components/ShowPostList";
+import { Route, Routes } from "react-router-dom";
+import ShowPost from "./components/ShowPost";
+import WritePost from "./components/WritePost";
 
 function App() {
-	const initialPostList = [
-		{ id: 1, title: "시사N 대학기자상 취재", replCount: 1 },
-		{ id: 2, title: "학보, 시사N 대학기자상 취재", replCount: 43 },
-		{ id: 3, title: "학보, 시사N 대학기자상 취재", replCount: 2 },
-	];
 	const [darkMode, setDarkMode] = useState(true);
-	const [loading, setLoading] = useState(false);
-	const [isPost, setIsPost] = useState(false);
-	const [postList, setPostList] = useState(initialPostList);
 
-	const addPost = () => {
-		setPostList((postList) => [
-			...postList,
-			{ id: 4, title: "학보, 시사N 대학기자상 취재", replCount: 21 },
-		]);
-	};
 	return (
 		<>
 			<ThemeProvider theme={darkMode ? darkTheme : lightTheme}>
@@ -35,12 +24,14 @@ function App() {
 					<Header darkMode={darkMode} setDarkMode={setDarkMode} />
 					<Main>
 						<Slogan />
-						<ShowPostList
-							loading={loading}
-							isPost={isPost}
-							postList={postList}
-							addPost={addPost}
-						/>
+						<Routes>
+							<Route path="/" element={<ShowPostList />}></Route>
+							<Route path="/write" element={<WritePost></WritePost>}></Route>
+							<Route
+								path="/post/:postId"
+								element={<ShowPost></ShowPost>}
+							></Route>
+						</Routes>
 					</Main>
 				</MediaDiv>
 				<Footer />
