@@ -34,10 +34,12 @@ export const TitleLogoDiv = styled.div`
 
 export const TitleBig = styled.span`
 	font-size: 40px;
+	cursor: pointer;
 `;
 
 export const TitleSmall = styled.span`
 	font-size: 20px;
+	cursor: pointer;
 `;
 
 export const SubHeaderDiv = styled.div`

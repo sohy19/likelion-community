@@ -18,44 +18,49 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import loadingIcon from "../loading.svg";
 import EachPost from "./EachPost";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
-const initialPostList = [
-	{ id: 1, title: "시사N 대학기자상 취재" },
-	{ id: 2, title: "학보, 시사N 대학기자상 취재" },
-	{ id: 3, title: "학보, 시사N 대학기자상 취재" },
-];
-
-function ShowPostList() {
+const ShowPostList = ({ apiUrl }) => {
 	const [loading, setLoading] = useState(true);
-	const [isPost, setIsPost] = useState(false);
 	const [postList, setPostList] = useState([]);
+	const [page, setPage] = useState(1);
+	const [pages, setPages] = useState([]);
 
-	const addPost = () => {
+	const addPost = useCallback(() => {
 		setPostList((postList) => [
 			...postList,
 			{ id: 4, title: "학보, 시사N 대학기자상 취재" },
 		]);
-	};
+	}, [postList]);
 
 	const navigate = useNavigate();
 	const goWrite = () => {
 		navigate("/write");
 	};
 
-	useEffect(() => {
-		setTimeout(() => {
-			setPostList(initialPostList);
+	const getPostList = useCallback(() => {
+		setLoading(true);
+		axios.get(`${apiUrl}list/?page=${page}&page_size=10`).then((response) => {
+			const lastPage = Math.ceil(response.data.count / 10);
+			const tempPages = [];
+			for (let i = 1; i <= lastPage; i++) {
+				tempPages.push(i);
+			}
+			setPages(tempPages);
+			setPostList(response.data.results);
 			setLoading(false);
-		}, 1000);
-	}, []);
+		});
+	});
+
+	useEffect(getPostList, [page]);
 
 	return (
 		<>
 			<PostSection>
 				<PostTitleDiv>
-					<FontAwesomeIcon onClick={addPost} icon={faArrowsRotate} />
+					<FontAwesomeIcon onClick={getPostList} icon={faArrowsRotate} />
 					<PostTitle>익명 게시판</PostTitle>
 					<CursorDiv>
 						<FontAwesomeIcon icon={faPenToSquare} onClick={goWrite} />
@@ -66,7 +71,7 @@ function ShowPostList() {
 						<LoadingDiv>
 							<LoadingImg src={loadingIcon} />
 						</LoadingDiv>
-					) : isPost ? (
+					) : postList.length === 0 ? (
 						<LoadingDiv>아직 기록된 글이 없습니다.</LoadingDiv>
 					) : (
 						<ul>
@@ -83,15 +88,33 @@ function ShowPostList() {
 			</PostSection>
 			<PagingSection>
 				<PagenumberDiv>
-					<FontAwesomeIcon icon={faArrowLeft} />
+					<FontAwesomeIcon
+						onClick={() => {
+							if (page > 1) {
+								setPage(page - 1);
+							}
+						}}
+						icon={faArrowLeft}
+					/>
 				</PagenumberDiv>
-				<PagenumberDiv>2</PagenumberDiv>
+				{pages.map((pageNum) => (
+					<PagenumberDiv key={pageNum} onClick={() => setPage(pageNum)}>
+						{pageNum}
+					</PagenumberDiv>
+				))}
 				<PagenumberDiv>
-					<FontAwesomeIcon icon={faArrowRight} />
+					<FontAwesomeIcon
+						onClick={() => {
+							if (pages.length > page) {
+								setPage(page + 1);
+							}
+						}}
+						icon={faArrowRight}
+					/>
 				</PagenumberDiv>
 			</PagingSection>
 		</>
 	);
-}
+};
 
 export default ShowPostList;

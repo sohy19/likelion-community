@@ -1,4 +1,5 @@
 import { SloganBig, SloganSection, SloganSmall } from "./styledComponent";
+import React from "react";
 
 function Slogan() {
 	return (
@@ -9,4 +10,4 @@ function Slogan() {
 	);
 }
 
-export default Slogan;
+export default React.memo(Slogan);

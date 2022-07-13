@@ -16,19 +16,7 @@ import {
 	Replwriter,
 	WritereplDiv,
 } from "./styledComponent";
-const postData = {
-	title: "어렵사리 정한 제목입니다.",
-	contents: `내가 그때 그렇게 딱 했는데 보이는 사람은 너라는 것을 알게 되었어, 그게
-  나에게는 힘들었지만, 쉽내가 그때 그렇게 딱 했는데 보이는 사람은 너라는
-  것을 알게 되었어, 그게 나에게는 힘들었지만, 내가 그때 그렇게 딱 했는데
-  보이는 사람은 너라는 것을 알게 되었어, 그게 나에게는 힘들었지만, 지
-  않았던 만큼 더욱 성장할 수 있다는 것을 뼈저리게 느꼈지`,
-};
 
-const replData = [
-	{ id: 2, contents: `내가 생각해도 그건 아니다` },
-	{ id: 3, contents: `그럴수도 있나?? 내가 생각해도 그건 아니다` },
-];
 const countRepls = (repls) => {
 	console.log("리뷰 개수를 세는 중...");
 	return repls.length;
@@ -78,6 +66,7 @@ const ShowPost = ({ apiUrl }) => {
 	const [postLoading, setPostLoading] = useState(true);
 	const [replLoading, setReplLoading] = useState(true);
 	const replInput = useRef();
+	const [repl, setRepl] = useState("");
 
 	useEffect(() => {
 		axios.get(`${apiUrl}posts/${Params.postId}`).then((response) => {
@@ -88,8 +77,6 @@ const ShowPost = ({ apiUrl }) => {
 			replInput.current.focus();
 		});
 	}, []);
-
-	const [repl, setRepl] = useState("");
 
 	const onChange = (e) => {
 		setRepl(e.target.value);
